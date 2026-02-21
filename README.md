@@ -82,11 +82,8 @@ curl http://localhost:8001/health
 
 #### 拦截提示示例
 
-在 ELSE 分支的「直接回复」节点中，可以这样写：
-
-```
-抱歉，您的输入包含不安全内容（{{内容安全检测.risk_category_name}}），无法处理该请求。
-```
+<img width="1397" height="623" alt="image" src="https://github.com/user-attachments/assets/a4f02603-9e18-4508-89c4-e8b6d657eebb" />
+<img width="374" height="625" alt="image" src="https://github.com/user-attachments/assets/cd5d5c94-f436-489d-9177-3dc5502cdebc" />
 
 #### 按类别配置
 
