@@ -1,0 +1,31 @@
+version: 0.0.1
+type: plugin
+author: "xguard"
+name: "xguard"
+label:
+  en_US: "XGuard"
+  zh_Hans: "XGuard 内容安全"
+description:
+  en_US: "XGuard content safety detection plugin. Detects 27 risk categories in text input before sending to LLM."
+  zh_Hans: "XGuard 内容安全检测插件。在发送给 LLM 之前对文本输入进行 27 类风险检测。"
+icon: "icon.svg"
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    network:
+      enabled: true
+plugins:
+  tools:
+    - "provider/xguard.yaml"
+meta:
+  version: 0.0.1
+  arch:
+    - "amd64"
+    - "arm64"
+  runner:
+    language: "python"
+    version: "3.12"
+    entrypoint: "main"
+created_at: "2026-02-15T00:00:00.000Z"

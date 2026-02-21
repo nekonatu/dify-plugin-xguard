@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="#1A1A2E"/>
+  <path d="M32 8L12 18v14c0 12.48 8.64 24.16 20 28 11.36-3.84 20-15.52 20-28V18L32 8z" fill="#16213E"/>
+  <text x="32" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#E94560">X</text>
+</svg>

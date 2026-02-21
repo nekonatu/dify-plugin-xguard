@@ -1,0 +1,40 @@
+identity:
+  author: "xguard"
+  name: "xguard"
+  label:
+    en_US: "XGuard"
+    zh_Hans: "XGuard 内容安全"
+  description:
+    en_US: "XGuard content safety detection service. Checks text input against 27 risk categories."
+    zh_Hans: "XGuard 内容安全检测服务。对文本输入进行 27 类风险检测。"
+  icon: "icon.svg"
+credentials_for_provider:
+  xguard_service_url:
+    type: text-input
+    required: true
+    label:
+      en_US: "XGuard Service URL"
+      zh_Hans: "XGuard 服务地址"
+    placeholder:
+      en_US: "http://host.docker.internal:8001"
+      zh_Hans: "http://host.docker.internal:8001"
+    help:
+      en_US: "Base URL of the XGuard safety detection service."
+      zh_Hans: "XGuard 安全检测服务的基础地址。"
+  default_threshold:
+    type: text-input
+    required: false
+    label:
+      en_US: "Default Risk Threshold"
+      zh_Hans: "默认风险阈值"
+    placeholder:
+      en_US: "0.5"
+      zh_Hans: "0.5"
+    help:
+      en_US: "Default threshold (0.0-1.0) for risk detection. Default: 0.5"
+      zh_Hans: "风险检测的默认阈值（0.0-1.0）。默认：0.5"
+extra:
+  python:
+    source: "provider/xguard.py"
+tools:
+  - "tools/content_check.yaml"

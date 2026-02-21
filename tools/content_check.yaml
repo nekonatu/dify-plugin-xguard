@@ -1,0 +1,734 @@
+identity:
+  name: "content_check"
+  author: "xguard"
+  label:
+    en_US: "Content Safety Check"
+    zh_Hans: "内容安全检测"
+description:
+  human:
+    en_US: "Detect safety risks in text across 27 categories before sending to LLM."
+    zh_Hans: "在发送给 LLM 之前，对文本进行 27 类内容安全风险检测。"
+  llm: "Use this tool to check whether user input text is safe before sending it to an LLM. It detects 27 risk categories including dangerous weapons, drug crimes, cyber attacks, terrorism, pornography, personal privacy violations, and more. Returns is_safe (boolean), risk_category, risk_score, and detailed scores. Call this tool when you need to verify that user input does not contain harmful, illegal, or policy-violating content."
+parameters:
+  - name: "text"
+    type: "string"
+    required: true
+    form: "llm"
+    label:
+      en_US: "Text"
+      zh_Hans: "文本"
+    human_description:
+      en_US: "The text content to check for safety risks."
+      zh_Hans: "需要进行安全风险检测的文本内容。"
+    llm_description: "The user input text to check for safety risks."
+  - name: "default_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    default: 0.5
+    min: 0
+    max: 1
+    label:
+      en_US: "Default Threshold"
+      zh_Hans: "默认阈值"
+    human_description:
+      en_US: "Default risk threshold for all categories (0.0-1.0). Individual category thresholds override this."
+      zh_Hans: "所有类别的默认风险阈值（0.0-1.0）。单个类别的阈值会覆盖此值。"
+  # ── 色情违禁 ──
+  - name: "pc_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Pornography (pc)"
+      zh_Hans: "色情违禁 (pc)"
+    human_description:
+      en_US: "Enable interception for pornographic/prohibited content."
+      zh_Hans: "启用色情违禁内容拦截。"
+  - name: "pc_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Pornography Threshold"
+      zh_Hans: "色情违禁阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 毒品犯罪 ──
+  - name: "dc_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Drug Crime (dc)"
+      zh_Hans: "毒品犯罪 (dc)"
+    human_description:
+      en_US: "Enable interception for drug-related crime content."
+      zh_Hans: "启用毒品犯罪内容拦截。"
+  - name: "dc_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Drug Crime Threshold"
+      zh_Hans: "毒品犯罪阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 危险武器 ──
+  - name: "dw_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Dangerous Weapons (dw)"
+      zh_Hans: "危险武器 (dw)"
+    human_description:
+      en_US: "Enable interception for dangerous weapons content."
+      zh_Hans: "启用危险武器内容拦截。"
+  - name: "dw_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Dangerous Weapons Threshold"
+      zh_Hans: "危险武器阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 财产侵犯 ──
+  - name: "pi_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Property Infringement (pi)"
+      zh_Hans: "财产侵犯 (pi)"
+    human_description:
+      en_US: "Enable interception for property infringement content."
+      zh_Hans: "启用财产侵犯内容拦截。"
+  - name: "pi_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Property Infringement Threshold"
+      zh_Hans: "财产侵犯阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 经济犯罪 ──
+  - name: "ec_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Economic Crime (ec)"
+      zh_Hans: "经济犯罪 (ec)"
+    human_description:
+      en_US: "Enable interception for economic crime content."
+      zh_Hans: "启用经济犯罪内容拦截。"
+  - name: "ec_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Economic Crime Threshold"
+      zh_Hans: "经济犯罪阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 辱骂谩骂 ──
+  - name: "ac_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Abuse/Cursing (ac)"
+      zh_Hans: "辱骂谩骂 (ac)"
+    human_description:
+      en_US: "Enable interception for abusive/cursing content."
+      zh_Hans: "启用辱骂谩骂内容拦截。"
+  - name: "ac_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Abuse/Cursing Threshold"
+      zh_Hans: "辱骂谩骂阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 诽谤中伤 ──
+  - name: "def_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Defamation (def)"
+      zh_Hans: "诽谤中伤 (def)"
+    human_description:
+      en_US: "Enable interception for defamation content."
+      zh_Hans: "启用诽谤中伤内容拦截。"
+  - name: "def_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Defamation Threshold"
+      zh_Hans: "诽谤中伤阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 威胁恐吓 ──
+  - name: "ti_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Threat/Intimidation (ti)"
+      zh_Hans: "威胁恐吓 (ti)"
+    human_description:
+      en_US: "Enable interception for threat/intimidation content."
+      zh_Hans: "启用威胁恐吓内容拦截。"
+  - name: "ti_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Threat/Intimidation Threshold"
+      zh_Hans: "威胁恐吓阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 网络欺凌 ──
+  - name: "cy_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Cyberbullying (cy)"
+      zh_Hans: "网络欺凌 (cy)"
+    human_description:
+      en_US: "Enable interception for cyberbullying content."
+      zh_Hans: "启用网络欺凌内容拦截。"
+  - name: "cy_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Cyberbullying Threshold"
+      zh_Hans: "网络欺凌阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 身体健康 ──
+  - name: "ph_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Physical Health (ph)"
+      zh_Hans: "身体健康 (ph)"
+    human_description:
+      en_US: "Enable interception for harmful physical health content."
+      zh_Hans: "启用身体健康有害内容拦截。"
+  - name: "ph_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Physical Health Threshold"
+      zh_Hans: "身体健康阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 心理健康 ──
+  - name: "mh_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Mental Health (mh)"
+      zh_Hans: "心理健康 (mh)"
+    human_description:
+      en_US: "Enable interception for harmful mental health content."
+      zh_Hans: "启用心理健康有害内容拦截。"
+  - name: "mh_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Mental Health Threshold"
+      zh_Hans: "心理健康阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 社会伦理 ──
+  - name: "se_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Social Ethics (se)"
+      zh_Hans: "社会伦理 (se)"
+    human_description:
+      en_US: "Enable interception for social ethics violation content."
+      zh_Hans: "启用社会伦理违规内容拦截。"
+  - name: "se_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Social Ethics Threshold"
+      zh_Hans: "社会伦理阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 科学伦理 ──
+  - name: "sci_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Science Ethics (sci)"
+      zh_Hans: "科学伦理 (sci)"
+    human_description:
+      en_US: "Enable interception for science ethics violation content."
+      zh_Hans: "启用科学伦理违规内容拦截。"
+  - name: "sci_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Science Ethics Threshold"
+      zh_Hans: "科学伦理阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 个人隐私 ──
+  - name: "pp_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Personal Privacy (pp)"
+      zh_Hans: "个人隐私 (pp)"
+    human_description:
+      en_US: "Enable interception for personal privacy violation content."
+      zh_Hans: "启用个人隐私违规内容拦截。"
+  - name: "pp_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Personal Privacy Threshold"
+      zh_Hans: "个人隐私阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 商业机密 ──
+  - name: "cs_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Commercial Secrets (cs)"
+      zh_Hans: "商业机密 (cs)"
+    human_description:
+      en_US: "Enable interception for commercial secrets content."
+      zh_Hans: "启用商业机密内容拦截。"
+  - name: "cs_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Commercial Secrets Threshold"
+      zh_Hans: "商业机密阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 访问控制 ──
+  - name: "acc_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Access Control (acc)"
+      zh_Hans: "访问控制 (acc)"
+    human_description:
+      en_US: "Enable interception for access control violation content."
+      zh_Hans: "启用访问控制违规内容拦截。"
+  - name: "acc_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Access Control Threshold"
+      zh_Hans: "访问控制阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 恶意代码 ──
+  - name: "mc_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Malicious Code (mc)"
+      zh_Hans: "恶意代码 (mc)"
+    human_description:
+      en_US: "Enable interception for malicious code content."
+      zh_Hans: "启用恶意代码内容拦截。"
+  - name: "mc_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Malicious Code Threshold"
+      zh_Hans: "恶意代码阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 黑客攻击 ──
+  - name: "ha_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Hacking (ha)"
+      zh_Hans: "黑客攻击 (ha)"
+    human_description:
+      en_US: "Enable interception for hacking content."
+      zh_Hans: "启用黑客攻击内容拦截。"
+  - name: "ha_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Hacking Threshold"
+      zh_Hans: "黑客攻击阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 物理安全 ──
+  - name: "ps_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Physical Safety (ps)"
+      zh_Hans: "物理安全 (ps)"
+    human_description:
+      en_US: "Enable interception for physical safety threat content."
+      zh_Hans: "启用物理安全威胁内容拦截。"
+  - name: "ps_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Physical Safety Threshold"
+      zh_Hans: "物理安全阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 暴力恐怖活动 ──
+  - name: "ter_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Terrorism (ter)"
+      zh_Hans: "暴力恐怖活动 (ter)"
+    human_description:
+      en_US: "Enable interception for terrorism content."
+      zh_Hans: "启用暴力恐怖活动内容拦截。"
+  - name: "ter_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Terrorism Threshold"
+      zh_Hans: "暴力恐怖活动阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 社会扰乱 ──
+  - name: "sd_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Social Disruption (sd)"
+      zh_Hans: "社会扰乱 (sd)"
+    human_description:
+      en_US: "Enable interception for social disruption content."
+      zh_Hans: "启用社会扰乱内容拦截。"
+  - name: "sd_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Social Disruption Threshold"
+      zh_Hans: "社会扰乱阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 极端主义思潮 ──
+  - name: "ext_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Extremism (ext)"
+      zh_Hans: "极端主义思潮 (ext)"
+    human_description:
+      en_US: "Enable interception for extremism content."
+      zh_Hans: "启用极端主义思潮内容拦截。"
+  - name: "ext_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Extremism Threshold"
+      zh_Hans: "极端主义思潮阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 金融建议 ──
+  - name: "fin_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Financial Advice (fin)"
+      zh_Hans: "金融建议 (fin)"
+    human_description:
+      en_US: "Enable interception for unauthorized financial advice content."
+      zh_Hans: "启用金融建议内容拦截。"
+  - name: "fin_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Financial Advice Threshold"
+      zh_Hans: "金融建议阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 医疗建议 ──
+  - name: "med_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Medical Advice (med)"
+      zh_Hans: "医疗建议 (med)"
+    human_description:
+      en_US: "Enable interception for unauthorized medical advice content."
+      zh_Hans: "启用医疗建议内容拦截。"
+  - name: "med_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Medical Advice Threshold"
+      zh_Hans: "医疗建议阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 法律建议 ──
+  - name: "law_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Legal Advice (law)"
+      zh_Hans: "法律建议 (law)"
+    human_description:
+      en_US: "Enable interception for unauthorized legal advice content."
+      zh_Hans: "启用法律建议内容拦截。"
+  - name: "law_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Legal Advice Threshold"
+      zh_Hans: "法律建议阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 未成年人不良引导 ──
+  - name: "cm_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Child Misguidance (cm)"
+      zh_Hans: "未成年人不良引导 (cm)"
+    human_description:
+      en_US: "Enable interception for child misguidance content."
+      zh_Hans: "启用未成年人不良引导内容拦截。"
+  - name: "cm_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Child Misguidance Threshold"
+      zh_Hans: "未成年人不良引导阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 未成年人虐待与剥削 ──
+  - name: "ma_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Child Abuse (ma)"
+      zh_Hans: "未成年人虐待与剥削 (ma)"
+    human_description:
+      en_US: "Enable interception for child abuse/exploitation content."
+      zh_Hans: "启用未成年人虐待与剥削内容拦截。"
+  - name: "ma_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Child Abuse Threshold"
+      zh_Hans: "未成年人虐待与剥削阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+  # ── 未成年人犯罪 ──
+  - name: "md_enabled"
+    type: "boolean"
+    required: false
+    form: "form"
+    default: true
+    label:
+      en_US: "Minor Delinquency (md)"
+      zh_Hans: "未成年人犯罪 (md)"
+    human_description:
+      en_US: "Enable interception for minor delinquency content."
+      zh_Hans: "启用未成年人犯罪内容拦截。"
+  - name: "md_threshold"
+    type: "number"
+    required: false
+    form: "form"
+    min: 0
+    max: 1
+    label:
+      en_US: "Minor Delinquency Threshold"
+      zh_Hans: "未成年人犯罪阈值"
+    human_description:
+      en_US: "Custom threshold for this category. Leave empty to use default."
+      zh_Hans: "该类别的自定义阈值，留空使用默认值。"
+output_schema:
+  type: "object"
+  properties:
+    is_safe:
+      type: "boolean"
+      description: "文本是否安全。true=安全，false=被拦截。"
+    risk_category:
+      type: "string"
+      description: "最高风险类别代码。安全时为空。"
+    risk_category_name:
+      type: "string"
+      description: "最高风险类别的中文名称。安全时为空。"
+    risk_score:
+      type: "number"
+      description: "最高风险分数（0.0-1.0）。"
+    risk_details:
+      type: "object"
+      description: "全部 27 个风险类别的分数。"
+    blocked_categories:
+      type: "array"
+      description: "所有被拦截的类别列表，包含代码、名称、分数和阈值。"
+      items:
+        type: "object"
+extra:
+  python:
+    source: "tools/content_check.py"
