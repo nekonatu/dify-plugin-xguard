@@ -6,8 +6,8 @@ label:
   en_US: "XGuard"
   zh_Hans: "XGuard 内容安全"
 description:
-  en_US: "XGuard content safety detection plugin. Detects 27 risk categories in text input before sending to LLM."
-  zh_Hans: "XGuard 内容安全检测插件。在发送给 LLM 之前对文本输入进行 27 类风险检测。"
+  en_US: "XGuard content safety detection plugin. Detects 28 risk categories in text input before sending to LLM."
+  zh_Hans: "XGuard 内容安全检测插件。在发送给 LLM 之前对文本输入进行 28 类风险检测。"
 icon: "icon.svg"
 resource:
   memory: 268435456

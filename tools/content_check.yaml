@@ -6,9 +6,9 @@ identity:
     zh_Hans: "内容安全检测"
 description:
   human:
-    en_US: "Detect safety risks in text across 27 categories before sending to LLM."
-    zh_Hans: "在发送给 LLM 之前，对文本进行 27 类内容安全风险检测。"
-  llm: "Use this tool to check whether user input text is safe before sending it to an LLM. It detects 27 risk categories including dangerous weapons, drug crimes, cyber attacks, terrorism, pornography, personal privacy violations, and more. Returns is_safe (boolean), risk_category, risk_score, and detailed scores. Call this tool when you need to verify that user input does not contain harmful, illegal, or policy-violating content."
+    en_US: "Detect safety risks in text across 28 categories before sending to LLM."
+    zh_Hans: "在发送给 LLM 之前，对文本进行 28 类内容安全风险检测。"
+  llm: "Use this tool to check whether user input text is safe before sending it to an LLM. It detects 28 risk categories including dangerous weapons, drug crimes, cyber attacks, terrorism, pornography, personal privacy violations, and more. Returns is_safe (boolean), risk_category, risk_score, and detailed scores. Call this tool when you need to verify that user input does not contain harmful, illegal, or policy-violating content."
 parameters:
   - name: "text"
     type: "string"

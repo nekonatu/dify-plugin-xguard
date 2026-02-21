@@ -5,7 +5,7 @@ import requests
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
-# 27 risk category codes -> Chinese names
+# 28 risk category codes -> Chinese names
 RISK_NAMES = {
     "pc": "色情违禁", "dc": "毒品犯罪", "dw": "危险武器",
     "pi": "财产侵犯", "ec": "经济犯罪", "ac": "辱骂谩骂",

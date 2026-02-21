@@ -5,8 +5,8 @@ identity:
     en_US: "XGuard"
     zh_Hans: "XGuard 内容安全"
   description:
-    en_US: "XGuard content safety detection service. Checks text input against 27 risk categories."
-    zh_Hans: "XGuard 内容安全检测服务。对文本输入进行 27 类风险检测。"
+    en_US: "XGuard content safety detection service. Checks text input against 28 risk categories."
+    zh_Hans: "XGuard 内容安全检测服务。对文本输入进行 28 类风险检测。"
   icon: "icon.svg"
 credentials_for_provider:
   xguard_service_url:
